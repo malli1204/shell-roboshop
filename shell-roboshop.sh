@@ -25,7 +25,7 @@ SG_ID="sg-00d233e7d20a6b130" # replace with your SG ID
 INSTANCES=("mongodb" "redis" "mysql" "rabbitmq" "catalogue" "user" "cart" "shipping" "payment" "dispatch" "frontend")
 ZONE_ID="Z0839647F7C8RDZW5D3P" # replace with your ZONE ID
 DOMAIN_NAME="malli12.site" # replace with your domain
-
+echo "hellowrold"
 #for instance in ${INSTANCES[@]}
 for instance in $@
 do
