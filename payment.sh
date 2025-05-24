@@ -69,7 +69,7 @@ systemctl enable payment &>>$LOG_FILE
 systemctl start payment &>>$LOG_FILE
 VALIDATE $? "starting the system services"
 
-systemctl start payment &>>$LOG_FILE
+systemctl restart payment &>>$LOG_FILE
 VALIDATE $? "restarting the system services"
 
 END_TIME=$(date +%s)
