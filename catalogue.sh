@@ -49,6 +49,7 @@ then
     VALIDATE $? "creating user"
 else 
     echo -e "system user already created $Y SKIPPING $N"
+fi
 mkdir /app 
 VALIDATE $? "creating app dir"
 
