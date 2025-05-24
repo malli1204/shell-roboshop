@@ -36,10 +36,10 @@ VALIDATE(){
     fi
 }
 
-dnf install maven -y
+dnf install maven -y &>>$LOG_FILE
 VALIDATE $? "Installing maven"
 
-d roboshop
+d roboshop &>>$LOG_FILE
 if [ $? -ne 0 ]
 then
     useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>>$LOG_FILE
@@ -47,41 +47,41 @@ then
 else 
     echo -e "system user already created $Y SKIPPING $N"
 fi
-mkdir -p /app 
+mkdir -p /app  &>>$LOG_FILE
 VALIDATE $? "creating app dir"
 
-curl -o /tmp/shipping.zip https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip 
+curl -o /tmp/shipping.zip https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip  &>>$LOG_FILE
 VALIDATE $? "downloading shipping"
 
 rm -rf /app/*
-cd /app 
+cd /app  &>>$LOG_FILE
 unzip /tmp/shipping.zip &>>$LOG_FILE
 VALIDATE $? "unzipping shipping"
 
-mvn clean package 
+mvn clean package  &>>$LOG_FILE
 VALIDATE $? "packaging the shipping application"
 
-mv target/shipping-1.0.jar shipping.jar 
+mv target/shipping-1.0.jar shipping.jar  &>>$LOG_FILE
 VALIDATE $? "moving the jar file"
 
-cp $SCRIPT_DIR/shipping.services /etc/systemd/system/shipping.service
+cp $SCRIPT_DIR/shipping.services /etc/systemd/system/shipping.service &>>$LOG_FILE
 
-systemctl daemon-reload
+systemctl daemon-reload &>>$LOG_FILE
 VALIDATE $? "reloading thee system"
 
-systemctl enable shipping 
-systemctl start shipping
+systemctl enable shipping  &>>$LOG_FILE
+systemctl start shipping &>>$LOG_FILE
 VALIDATE $? "startinh the system service"
 
-dnf install mysql -y 
+dnf install mysql -y  &>>$LOG_FILE
 VALIDATE $? "installing the mysql"
 
-mysql -h mysql.malli12.site -uroot -pRoboShop@1 < /app/db/schema.sql
-mysql -h mysql.malli12.site -uroot -pRoboShop@1 < /app/db/app-user.sql 
-mysql -h mysql.malli12.site -uroot -pRoboShop@1 < /app/db/master-data.sql
+mysql -h mysql.malli12.site -uroot -pRoboShop@1 < /app/db/schema.sql &>>$LOG_FILE
+mysql -h mysql.malli12.site -uroot -pRoboShop@1 < /app/db/app-user.sql  &>>$LOG_FILE
+mysql -h mysql.malli12.site -uroot -pRoboShop@1 < /app/db/master-data.sql &>>$LOG_FILE
 VALIDATE $? "loading the data"
 
-systemctl restart shipping
+systemctl restart shipping &>>$LOG_FILE
 VALIDATE $? "restarting the data"
 
 END_TIME=$(date +%s)
