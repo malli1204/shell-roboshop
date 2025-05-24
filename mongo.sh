@@ -31,7 +31,7 @@ validate(){
     fi
 }
 
-cp mongo.repo /etc/yum.repos.d/mongo.repo
+cp mongo.repo /etc/yum.repos.d/mongodb.repo
 validate $? "Copying mongodb Repo"
 
 dnf install mongodb-org -y &>>$LOG_FILE
@@ -44,7 +44,7 @@ systemctl start mongod &>>$LOG_FILE
 validate $? "mongodb starting"
 
 sed -i 's/127.0.0.0/0.0.0.0/g' /etc/mongod.conf &>>$LOG_FILE
-validate $? "changinf congif to allow remote connections"
+validate $? "changing congif to allow remote connections"
 
 systemctl restart mongod &>>$LOG_FILE
 validate $? "mongodb restarting"
