@@ -22,8 +22,8 @@ else
     echo "You are running with root access" | tee -a $LOG_FILE
 fi
 
-echo "please enter root password"
-read -s MYSQL_ROOT_PASSWORD
+echo "please enter rabbitmq password"
+read -s RABBITMQ_PASSWORD
 
 # validate functions takes input as exit status, what command they tried to install
 VALIDATE(){
@@ -36,4 +36,16 @@ VALIDATE(){
     fi
 }
 
-cp $SCRIPT_DIR/rabbitmq.services /etc/yum.repos.d/rabbitmq.repo
+cp $SCRIPT_DIR/rabbitmq.services /etc/yum.repos.d/rabbitmq.repo &>>$LOG_FILE
+VALIDATE $? "adding the repos"
+
+dnf install rabbitmq-server -y &>>$LOG_FILE
+VALIDATE $? "installing the rabbit mq"
+
+systemctl enable rabbitmq-server &>>$LOG_FILE
+systemctl start rabbitmq-server &>>$LOG_FILE
+VALIDATE $? "starting the system services"
+
+rabbitmqctl add_user roboshop $RABBITMQ_PASSWORD &>>$LOG_FILE
+rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*" &>>$LOG_FILE
+VALIDATE $? "adding all the permissions"
