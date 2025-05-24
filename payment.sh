@@ -53,7 +53,7 @@ VALIDATE $? "downloading user"
 
 rm -rf /app/* &>>$LOG_FILE
 cd /app 
-unzip /tmp/user.zip &>>$LOG_FILE
+unzip /tmp/payment.zip &>>$LOG_FILE
 VALIDATE $? "unzipping user"
 
 pip3 install -r requirements.txt &>>$LOG_FILE
