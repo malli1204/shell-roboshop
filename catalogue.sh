@@ -79,7 +79,6 @@ dnf install mongodb-mongosh -y &>>$LOG_FILE
 VALIDATE $? "installing mongodb"
 
 STATUS=$(mongosh --host mongodb.malli12.site --eval 'db.getMongo().getDBNames().indexOf("catalogue")')
-
 if [ $STATUS -lt 0 ]
 then
     mongosh --host mongodb.malli12.site </app/db/master-data.js &>>$LOG_FILE
