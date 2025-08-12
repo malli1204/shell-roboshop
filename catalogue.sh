@@ -60,6 +60,9 @@ VALIDATE $? "loading the zip file.."
 rm -rf /app/*
 
 cd /app 
+unzip /tmp/catalogue.zip
+VALIDATE $? "unzipping.."
+
 npm install 
 VALIDATE $? "installing dependencies.."
 
