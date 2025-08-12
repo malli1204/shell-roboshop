@@ -52,7 +52,7 @@ do
         IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query "Reservations[0].Instances[0].PublicIpAddress" --output text)
     fi
     echo "$instance IP address: $IP"
-
+done
 
 # AMI_ID="ami-09c813fb71547fc4f"
 # SG_ID="sg-00d233e7d20a6b130"
