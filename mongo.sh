@@ -22,7 +22,7 @@ else
     echo "you are running with root user" | tee -a $LOG_FILE
 fi
 
-validate(){
+VALIDATE(){
     if [ $1 -eq 0 ]
     then 
         echo -e "Installing $2 is $G success $N " | tee -a $LOG_FILE
