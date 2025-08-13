@@ -50,6 +50,7 @@ then
     VALIDATE $? "adding the user"
 else
     echo -e "user already added kindly skip"
+fi 
 
 mkdir -p /app 
 VALIDATE $? "creating app directory"
