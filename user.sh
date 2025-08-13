@@ -33,48 +33,77 @@ VALIDATE(){
     fi
 }
 
-dnf module disable nodejs -y &>>$LOG_FILE
-VALIDATE $? "module disable"
-
-dnf module enable nodejs:20 -y &>>$LOG_FILE
-VALIDATE $? "module enable"
-
-dnf install nodejs -y &>>$LOG_FILE
-VALIDATE $? "installing nodejs"
-
-id roboshop
-if [ $? -ne 0 ]
-then
-    useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>>$LOG_FILE
-    VALIDATE $? "creating user"
-else 
-    echo -e "system user already created $Y SKIPPING $N"
-fi
-mkdir -p /app 
-VALIDATE $? "creating app dir"
-
-curl -o /tmp/user.zip https://roboshop-artifacts.s3.amazonaws.com/user-v3.zip 
-VALIDATE $? "downloading user"
-
-rm -rf /app/*
-cd /app 
-unzip /tmp/user.zip &>>$LOG_FILE
-VALIDATE $? "unzipping user"
-
-npm install &>>$LOG_FILE 
-VALIDATE $? "installing dependencies" &>>$LOG_FILE
-
-cp $SCRIPT_DIR/user.services /etc/systemd/system/user.service
-VALIDATE $? "creating services"
-
-systemctl daemon-reload &>>$LOG_FILE 
-systemctl enable user &>>$LOG_FILE
-systemctl start user &>>$LOG_FILE
-VALIDATE $? "starting the user"
 
 
-END_TIME=$(date +%s)
 
-TOTAL_TIME=$(($END_TIME - $START_TIME))
 
-echo -e "execution time , $Y time taken: $TOTAL_TIME"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# dnf module disable nodejs -y &>>$LOG_FILE
+# VALIDATE $? "module disable"
+
+# dnf module enable nodejs:20 -y &>>$LOG_FILE
+# VALIDATE $? "module enable"
+
+# dnf install nodejs -y &>>$LOG_FILE
+# VALIDATE $? "installing nodejs"
+
+# id roboshop
+# if [ $? -ne 0 ]
+# then
+#     useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>>$LOG_FILE
+#     VALIDATE $? "creating user"
+# else 
+#     echo -e "system user already created $Y SKIPPING $N"
+# fi
+# mkdir -p /app 
+# VALIDATE $? "creating app dir"
+
+# curl -o /tmp/user.zip https://roboshop-artifacts.s3.amazonaws.com/user-v3.zip 
+# VALIDATE $? "downloading user"
+
+# rm -rf /app/*
+# cd /app 
+# unzip /tmp/user.zip &>>$LOG_FILE
+# VALIDATE $? "unzipping user"
+
+# npm install &>>$LOG_FILE 
+# VALIDATE $? "installing dependencies" &>>$LOG_FILE
+
+# cp $SCRIPT_DIR/user.services /etc/systemd/system/user.service
+# VALIDATE $? "creating services"
+
+# systemctl daemon-reload &>>$LOG_FILE 
+# systemctl enable user &>>$LOG_FILE
+# systemctl start user &>>$LOG_FILE
+# VALIDATE $? "starting the user"
+
+
+# END_TIME=$(date +%s)
+
+# TOTAL_TIME=$(($END_TIME - $START_TIME))
+
+# echo -e "execution time , $Y time taken: $TOTAL_TIME"
