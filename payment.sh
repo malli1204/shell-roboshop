@@ -1,4 +1,5 @@
 #!/bin/bash
+
 START_TIME=$(date +%s)
 USERID=$(id -u)
 R="\e[31m"
@@ -34,46 +35,44 @@ VALIDATE(){
 }
 
 dnf install python3 gcc python3-devel -y &>>$LOG_FILE
-VALIDATE $? "installing python 3"
-
+VALIDATE $? "Install Python3 packages"
 
 id roboshop &>>$LOG_FILE
 if [ $? -ne 0 ]
 then
     useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>>$LOG_FILE
-    VALIDATE $? "creating user"
-else 
-    echo -e "system user already created $Y SKIPPING $N"
+    VALIDATE $? "Creating roboshop system user"
+else
+    echo -e "System user roboshop already created ... $Y SKIPPING $N"
 fi
-mkdir -p /app &>>$LOG_FILE
-VALIDATE $? "creating app dir"
+
+mkdir -p /app 
+VALIDATE $? "Creating app directory"
 
 curl -o /tmp/payment.zip https://roboshop-artifacts.s3.amazonaws.com/payment-v3.zip &>>$LOG_FILE
-VALIDATE $? "downloading user"
+VALIDATE $? "Downloading payment"
 
-rm -rf /app/* &>>$LOG_FILE
+rm -rf /app/*
 cd /app 
 unzip /tmp/payment.zip &>>$LOG_FILE
-VALIDATE $? "unzipping user"
+VALIDATE $? "unzipping payment"
 
 pip3 install -r requirements.txt &>>$LOG_FILE
-VALIDATE $? "installing dependencies"
+VALIDATE $? "Installing dependencies"
 
-cp $SCRIPT_DIR/payment.services /etc/systemd/system/payment.service &>>$LOG_FILE
-VALIDATE $? "changing the system services"
+cp $SCRIPT_DIR/payment.service /etc/systemd/system/payment.service &>>$LOG_FILE
+VALIDATE $? "Copying payment service"
 
 systemctl daemon-reload &>>$LOG_FILE
-VALIDATE $? "reloading the system"
+VALIDATE $? "Daemon Reload"
 
 systemctl enable payment &>>$LOG_FILE
-systemctl start payment &>>$LOG_FILE
-VALIDATE $? "starting the system services"
+VALIDATE $? "Enable payment"
 
-systemctl restart payment &>>$LOG_FILE
-VALIDATE $? "restarting the system services"
+systemctl start payment &>>$LOG_FILE
+VALIDATE $? "Starting payment"
 
 END_TIME=$(date +%s)
+TOTAL_TIME=$(( $END_TIME - $START_TIME ))
 
-TOTAL_TIME=$(($END_TIME - $START_TIME))
-
-echo -e "execution time , $Y time taken: $TOTAL_TIME"
+echo -e "Script exection completed successfully, $Y time taken: $TOTAL_TIME seconds $N" | tee -a $LOG_FILE
