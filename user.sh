@@ -33,17 +33,53 @@ VALIDATE(){
     fi
 }
 
+dnf module disable nodejs -y
+VALIDATE $? "module disable"
 
+dnf module enable nodejs:20 -y
+VALIDATE $? "module enable"
 
+dnf install nodejs -y
+VALIDATE $? "installing nodejs"
 
+id roboshop
 
+if [ $? -ne 0 ]
+then
+    useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
+    VALIDATE $? "creating user"
+else
+    echo -e "Already user created kindly skip"
+fi
 
+mkdir /app 
+VALIDATE $? "creating app dir"
 
+curl -L -o /tmp/user.zip https://roboshop-artifacts.s3.amazonaws.com/user-v3.zip 
+VALIDATE $? "downloading user"
 
+rm -rf /app/*
 
+cd /app 
+unzip /tmp/user.zip
+VALIDATE $? "unzipping user"
 
+npm install 
+VALIDATE $? "installing dependencies"
 
+cp $SCRIPT_DIR/user.service /etc/systemd/system/user.service
+VALIDATE $? "creating services"
 
+systemctl daemon-reload
+systemctl enable user 
+systemctl start user
+VALIDATE $? "starting the user"
+
+END_TIME=$(date +%s)
+
+TOTAL_TIME=$(($END_TIME - $START_TIME))
+
+echo -e "execution time , $Y time taken: $TOTAL_TIME"
 
 
 
