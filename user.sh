@@ -52,14 +52,13 @@ else
     echo -e "Already user created kindly skip"
 fi
 
-mkdir /app 
+mkdir -p /app 
 VALIDATE $? "creating app dir"
 
 curl -L -o /tmp/user.zip https://roboshop-artifacts.s3.amazonaws.com/user-v3.zip 
 VALIDATE $? "downloading user"
 
 rm -rf /app/*
-
 cd /app 
 unzip /tmp/user.zip
 VALIDATE $? "unzipping user"
