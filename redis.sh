@@ -31,27 +31,68 @@ VALIDATE(){
         exit 1
     fi
 }
-dnf module disable redis -y &>>$LOG_FILE
+
+
+dnf module disable redis -y
 VALIDATE $? "disabling redis"
 
-dnf module enable redis:7 -y &>>$LOG_FILE
-VALIDATE $? "Enabling redis"
+dnf module enable redis:7 -y
+VALIDATE $? "enabling redis"
 
-dnf install redis -y &>>$LOG_FILE
+dnf install redis -y 
 VALIDATE $? "installing redis"
 
-sed -i -e 's/127.0.0.1/0.0.0.0/g' -e '/protected-mode/ c protected-mode no' /etc/redis/redis.conf &>>$LOG_FILE
+sed -i 's/127.0.0.1/0.0.0.0/g ' -e '/protected-mode c protected-mode no' /etc/redis/redis.conf
 VALIDATE $? "changing config to allow remote connections"
 
-systemctl enable redis &>>$LOG_FILE
-systemctl start redis &>>$LOG_FILE
+systemctl enable redis 
+systemctl start redis 
 VALIDATE $? "starting the system services"
 
-systemctl restart redis &>>$LOG_FILE
-VALIDATE $? "restarting the system services"
 
 END_TIME=$(date +%s)
 
 TOTAL_TIME=$(($END_TIME - $START_TIME))
 
 echo -e "execution time , $Y time taken: $TOTAL_TIME"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# dnf module disable redis -y &>>$LOG_FILE
+# VALIDATE $? "disabling redis"
+
+# dnf module enable redis:7 -y &>>$LOG_FILE
+# VALIDATE $? "Enabling redis"
+
+# dnf install redis -y &>>$LOG_FILE
+# VALIDATE $? "installing redis"
+
+# sed -i -e 's/127.0.0.1/0.0.0.0/g' -e '/protected-mode/ c protected-mode no' /etc/redis/redis.conf &>>$LOG_FILE
+# VALIDATE $? "changing config to allow remote connections"
+
+# systemctl enable redis &>>$LOG_FILE
+# systemctl start redis &>>$LOG_FILE
+# VALIDATE $? "starting the system services"
+
+# systemctl restart redis &>>$LOG_FILE
+# VALIDATE $? "restarting the system services"
+
+# END_TIME=$(date +%s)
+
+# TOTAL_TIME=$(($END_TIME - $START_TIME))
+
+# echo -e "execution time , $Y time taken: $TOTAL_TIME"
