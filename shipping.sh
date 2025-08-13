@@ -71,16 +71,16 @@ VALIDATE $? "reloading thee system"
 
 systemctl enable shipping  &>>$LOG_FILE
 systemctl start shipping &>>$LOG_FILE
-VALIDATE $? "startinh the system service"
+VALIDATE $? "starting the system service"
 
 dnf install mysql -y  &>>$LOG_FILE
 VALIDATE $? "installing the mysql"
-mysql -h mysql.malli12.site -u root -p$MYSQL_ROOT_PASSWORD -e 'use cities' &>>$LOG_FILE
+mysql -h mysql.malli12.site -u root -p$MYSQL_ROOT_PASSWORD -e 'use cities'
 if [ $? -ne 0 ]
 then
-    mysql -h mysql.malli12.site -uroot -p$MYSQL_ROOT_PASSWORD < /app/db/schema.sql &>>$LOG_FILE
-    mysql -h mysql.malli12.site -uroot -p$MYSQL_ROOT_PASSWORD < /app/db/app-user.sql  &>>$LOG_FILE
-    mysql -h mysql.malli12.site -uroot -p$MYSQL_ROOT_PASSWORD < /app/db/master-data.sql &>>$LOG_FILE
+    mysql -h mysql.malli12.site -uroot -p$MYSQL_ROOT_PASSWORD < /app/db/schema.sql 
+    mysql -h mysql.malli12.site -uroot -p$MYSQL_ROOT_PASSWORD < /app/db/app-user.sql  
+    mysql -h mysql.malli12.site -uroot -p$MYSQL_ROOT_PASSWORD < /app/db/master-data.sql 
     VALIDATE $? "loading the data"
 else
     echo -e "Data is already loaded into MySQL ... $Y SKIPPING $N"
