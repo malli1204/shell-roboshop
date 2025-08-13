@@ -1,4 +1,5 @@
 #!/bin/bash
+
 START_TIME=$(date +%s)
 USERID=$(id -u)
 R="\e[31m"
@@ -22,8 +23,8 @@ else
     echo "You are running with root access" | tee -a $LOG_FILE
 fi
 
-echo "please enter rabbitmq password"
-read -s RABBITMQ_PASSWORD
+echo "Please enter rabbitmq password to setup"
+read -s RABBITMQ_PASSWD
 
 # validate functions takes input as exit status, what command they tried to install
 VALIDATE(){
@@ -36,16 +37,22 @@ VALIDATE(){
     fi
 }
 
-cp $SCRIPT_DIR/rabbitmq.services /etc/yum.repos.d/rabbitmq.repo &>>$LOG_FILE
-VALIDATE $? "adding the repos"
+cp rabbitmq.repo /etc/yum.repos.d/rabbitmq.repo
+VALIDATE $? "Adding rabbitmq repo"
 
 dnf install rabbitmq-server -y &>>$LOG_FILE
-VALIDATE $? "installing the rabbit mq"
+VALIDATE $? "Installing rabbitmq server"
 
 systemctl enable rabbitmq-server &>>$LOG_FILE
-systemctl start rabbitmq-server &>>$LOG_FILE
-VALIDATE $? "starting the system services"
+VALIDATE $? "Enabling rabbitmq server"
 
-rabbitmqctl add_user roboshop $RABBITMQ_PASSWORD &>>$LOG_FILE
+systemctl start rabbitmq-server &>>$LOG_FILE
+VALIDATE $? "Starting rabbitmq server"
+
+rabbitmqctl add_user roboshop $RABBITMQ_PASSWD &>>$LOG_FILE
 rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*" &>>$LOG_FILE
-VALIDATE $? "adding all the permissions"
+
+END_TIME=$(date +%s)
+TOTAL_TIME=$(( $END_TIME - $START_TIME ))
+
+echo -e "Script exection completed successfully, $Y time taken: $TOTAL_TIME seconds $N" | tee -a $LOG_FILE
