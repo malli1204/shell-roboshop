@@ -66,7 +66,7 @@ VALIDATE $? "unzipping the cart file"
 npm install 
 VALIDATE $? "installing the dependencies"
 
-sed -i $SCRIPT_DIR/cart.service /etc/systemd/system/cart.service
+cp $SCRIPT_DIR/cart.service /etc/systemd/system/cart.service
 VALIDATE $? "updating the service files"
 
 systemctl daemon-reload
